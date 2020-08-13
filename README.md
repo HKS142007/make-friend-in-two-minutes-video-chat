@@ -11,7 +11,7 @@ npm install
 npm run dev
 ```
 
-### ![Demo](https://radiant-castle-06372.herokuapp.com/)
+### you can try [demo](https://radiant-castle-06372.herokuapp.com/) now.
 
 #### Notes
 ```
