@@ -82,7 +82,7 @@ socket.on('call-made',data=>{
       if(target_camera == 'false'){
         remoteStream.getVideoTracks()[0].enabled = false
       }
-      let counter = 10;
+      let counter = 120;
       checked = true;
 
   let interval_caller = setInterval(() => {
@@ -130,7 +130,7 @@ peer.on('call', function(call) {
         if(target_camera == 'false'){
           remoteStream.getVideoTracks()[0].enabled = false
         }
-        let counter = 10;
+        let counter = 120;
         checked = true;
       let interval_answer =  setInterval(() => {
           if(!checked)
