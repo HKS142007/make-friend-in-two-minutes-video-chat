@@ -2,7 +2,9 @@
 <html lang="en">
  <head>
     <script src='https://cdn.scaledrone.com/scaledrone.min.js'></script>
-
+  <link rel="apple-touch-icon" sizes="180x180" href="./favicon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="./favicon.png">
    <meta charset="UTF-8" />
    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
@@ -45,12 +47,12 @@
      </div>
 
      <div class="row mt-5">
-      <div class="col-md-9">
+      <div class="col-md-9" id="remote-container">
          <video  autoplay class="remote-video" id="remote-video"></video>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-3 mt-3">
+      <div class="col-md-3 mt-3" id="local-container">
         <video autoplay muted class="local-video" id="local-video"></video>
 
       </div>
