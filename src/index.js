@@ -8,16 +8,14 @@ const server = http.createServer(app);
 
 const io = require("socket.io")(server);
 app.use(express.static(__dirname + "/public"));
-let code = "AYA"
+let code = "DSC"
 let Idlesockets = [];
 let activeSockets = []
 io.sockets.on("connection", async socket => {
-  console.log('connect-before',Idlesockets.length,activeSockets.length)
   Idlesockets = await [...Idlesockets,socket]
   activeSockets = await [...activeSockets,socket];
-  console.log('connect-after',Idlesockets.length,activeSockets.length)
 
-  socket.emit('new-connections', {
+  io.sockets.emit('new-connections', {
     idle: Idlesockets.length,
     online: activeSockets.length
   })
@@ -38,7 +36,7 @@ io.sockets.on("connection", async socket => {
     Idlesockets = Idlesockets.filter(existingSocket => existingSocket.id !== socket.id)
     Idlesockets = Idlesockets.filter(existingSocket => existingSocket.id !== randomUser.id)
     
-    socket.emit('new-connections', {
+    io.sockets.emit('new-connections', {
       idle: Idlesockets.length,
       online: activeSockets.length
     })
@@ -57,17 +55,24 @@ io.sockets.on("connection", async socket => {
     console.log(socket.id,socket.hasCamera)
   })
 
+  socket.on('add-to-idle',()=>{
+    if(Idlesockets.filter(idle=>idle.id == socket.id).length == 0 )
+      Idlesockets.push(socket);
+    
+    io.sockets.emit('new-connections', {
+      idle: Idlesockets.length,
+      online: activeSockets.length
+    })
+  })
+
   
 
 
   socket.on("disconnect", async () => {
-    console.log('discconected')
-    console.log('disc-before',Idlesockets.length,activeSockets.length)
-    Idlesockets = await Idlesockets.filter(Idlesocket => Idlesocket.id !== socket.id)
+   Idlesockets = await Idlesockets.filter(Idlesocket => Idlesocket.id !== socket.id)
     activeSockets = await activeSockets.filter(activeSocket => activeSocket.id !== socket.id)
-    console.log('connect-after',Idlesockets.length,activeSockets.length)
 
-    socket.emit('new-connections', {
+    io.sockets.emit('new-connections', {
       idle: Idlesockets.length,
       online: activeSockets.length
     })
