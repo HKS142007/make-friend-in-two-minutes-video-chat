@@ -1,8 +1,32 @@
-const socket = io(window.location.origin);
+const host = window.location.origin;
+const socket = io(host);
 const localVideo = document.getElementById("local-video");
 const remoteVideo = document.getElementById("remote-video");
 var peer = new Peer();
 var peerId ;
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+let target_camera = true;
+var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
+
+let code = urlParams.get('code')
+let withcamera = urlParams.get('with-camera')
+
+
+
+fetch(`${host}/checkCode?code=${code}`).then(res=>{
+  return res.json()
+}).then(status=>{
+   if(!status){
+     alert('code is invalid')
+    window.location.href = `/`
+   } 
+})
+
+socket.on('set-camera',(hasCamera)=>{
+  target_camera = hasCamera;
+})
+
 socket.on('new-connections',data=>{
   document.getElementById('idle-users').innerHTML = `${data.idle} Idle`
   document.getElementById('online-users').innerHTML = `${data.online} Online`
@@ -10,14 +34,21 @@ socket.on('new-connections',data=>{
 
 peer.on('open', function(id) {
     peerId = id;
-    console.log('My peer ID is: ' + id);
+    socket.emit('camera',withcamera);
   });
+
+  peer.on('close',function(user){
+    console.log('closed',user)
+  })
+
+  peer.on('disconnected',function(user){
+    console.log('disconnected',user)
+  })
 
   document.getElementById('make-call').addEventListener('click', async () => {
     callUser()
 })
 
-var getUserMedia = navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
 socket.on('no-idle',()=>{
   alert('Sorry there is no idle users , please try again after 2 minutes')
@@ -28,22 +59,34 @@ function callUser(){
         peerId
     });
 }
+
+
+
 socket.on('call-made',data=>{
-  console.log(data);
   getUserMedia({video: true, audio: true}, function(stream) {
     var call = peer.call(`${data.peerId}`, stream);
     localVideo.srcObject = stream;
     call.on('stream', function(remoteStream) {
+
       // Show stream in some video/canvas element.
       let counter = 120;
-      
       remoteVideo.srcObject = remoteStream
-      setTimeout(() => {
-        alert('2 minutes are done now , page will reload if you like to try again')
-        window.location.href = "/"
-    }, 120000);
-    setInterval(() => {
+      if(target_camera == 'false'){
+        remoteStream.getVideoTracks()[0].enabled = false
+      }
+
+  let interval = setInterval(() => {
+      if(counter > 0){
         counter--;
+      }
+      else{
+        clearInterval(interval);
+        if (confirm('do you want to join room again ?')) {
+          window.location.href = `${host}/room.html?code=${code}&with-camera=${withcamera}`
+        }
+        else
+          window.location.href = '/'
+      }
         document.getElementById('count-down').innerHTML = `${counter} Seconds`;
     }, 1000);
     
@@ -53,25 +96,33 @@ socket.on('call-made',data=>{
     console.log('Failed to get local stream' ,err);
   });
 })
+
 peer.on('call', function(call) {
-    console.log('call',call);
   getUserMedia({video: true, audio: true}, function(stream) {
-    console.log('stream',stream);
     localVideo.srcObject = stream
 
     call.answer(stream); // Answer the call with an A/V stream.
     call.on('stream', function(remoteStream) {
         let counter = 120;
-
         remoteVideo.srcObject = remoteStream
-        setTimeout(() => {
-          alert('2 minutes are done now , page will reload if you like to try again')
-          window.location.href = "/"
-      }, 120000);
-      setInterval(() => {
-          counter--;
-          document.getElementById('count-down').innerHTML = `${counter} Seconds`;
-      }, 1000);
+        if(target_camera == 'false'){
+          remoteStream.getVideoTracks()[0].enabled = false
+        }
+      let interval=  setInterval(() => {
+          if(counter > 0){
+            counter--;
+          }
+          else{
+        clearInterval(interval);
+            
+            if (confirm('do you want to join room again ?')) {
+              window.location.href = `${host}/room.html?code=${code}&with-camera=${withcamera}`
+            }
+            else
+              window.location.href = '/'
+          }
+            document.getElementById('count-down').innerHTML = `${counter} Seconds`;
+        }, 1000);
       
       document.getElementById('make-call').disabled =true;
     });

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+    <script src='https://cdn.scaledrone.com/scaledrone.min.js'></script>
+
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+   <title>Speed Networking</title>
+   <link
+     href="https://fonts.googleapis.com/css?family=Montserrat:300,400,500,700&display=swap"
+     rel="stylesheet"
+   />
+   <link rel="stylesheet" href="./style/styles.css" />
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+ </head>
+ <body>
+   <div class="container">
+     <header class="header">
+       <div class="logo-container row">
+        <div class="col-md-5">
+          <h2 class="logo-text">
+            Speed<span class="logo-highlight"> Networking</span>
+           </h2>
+        </div>
+         <div class="col-md-4">
+          <button id="make-call"  class="btn btn-primary">Join a Room</button>
+         </div>
+         <div class="col-md-3">
+          <h2 class="talk-info" id="talking-with-info"> 
+            <span id="online-users" class="online">0 Online</span>
+            <span>&ThickSpace;&ThickSpace;,&ThickSpace;</span>
+            <span id="idle-users" class="idle">0 Idle</span>
+          </h2>
+         </div>
+       </div>
+     </header>
+
+     <div class="row">
+       <div class="col-md-3 mt-5">
+          <h3 id="count-down"></h3>
+       </div>
+     </div>
+
+     <div class="row mt-5">
+      <div class="col-md-9">
+         <video  autoplay class="remote-video" id="remote-video"></video>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3 mt-3">
+        <video autoplay muted class="local-video" id="local-video"></video>
+
+      </div>
+    </div>
+
+   </div>
+   <script src="./scripts/peerjs.min.js"></script>
+
+   <script src="./scripts/peer.js"></script>
+   <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+ </body>
+</html>
