@@ -72,7 +72,7 @@ socket.on('call-made',data=>{
     call.on('stream', function(remoteStream) {
 
       // Show stream in some video/canvas element.
-      let counter = 10;
+      let counter = 120;
       remoteVideo.srcObject = remoteStream
       if(target_camera == 'false'){
         remoteStream.getVideoTracks()[0].enabled = false
@@ -109,7 +109,7 @@ peer.on('call', function(call) {
 
     call.answer(stream); // Answer the call with an A/V stream.
     call.on('stream', function(remoteStream) {
-        let counter = 10;
+        let counter = 120;
         remoteVideo.srcObject = remoteStream
         if(target_camera == 'false'){
           remoteStream.getVideoTracks()[0].enabled = false
