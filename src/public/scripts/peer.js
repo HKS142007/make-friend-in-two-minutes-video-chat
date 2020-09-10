@@ -29,12 +29,16 @@ fetch(`${host}/checkCode?code=${code}`).then(res=>{
    } 
 })
 
+document.getElementById('leave-room').addEventListener('click',()=>{
+  window.location.href = `${host}/room.html?code=${code}&with-camera=${withcamera}`
+})
+
 socket.on('set-camera',(hasCamera)=>{
   target_camera = hasCamera;
 })
 
 socket.on('new-connections',data=>{
-  document.getElementById('idle-users').innerHTML = `${data.idle} Idle`
+  document.getElementById('idle-users').innerHTML = `${data.idle} Availables`
   document.getElementById('online-users').innerHTML = `${data.online} Online`
 })
 
@@ -57,7 +61,7 @@ peer.on('open', function(id) {
 
 
 socket.on('no-idle',()=>{
-  alert('Sorry there is no idle users , please try again after 2 minutes')
+  alert('No one is available now, please try again after 10 seconds')
 })
 
 function callUser(){
@@ -82,7 +86,7 @@ socket.on('call-made',data=>{
       if(target_camera == 'false'){
         remoteStream.getVideoTracks()[0].enabled = false
       }
-      let counter = 120;
+      let counter = 180;
       checked = true;
 
   let interval_caller = setInterval(() => {
@@ -130,7 +134,7 @@ peer.on('call', function(call) {
         if(target_camera == 'false'){
           remoteStream.getVideoTracks()[0].enabled = false
         }
-        let counter = 120;
+        let counter = 180;
         checked = true;
       let interval_answer =  setInterval(() => {
           if(!checked)

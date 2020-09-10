@@ -8,7 +8,7 @@ const server = http.createServer(app);
 
 const io = require("socket.io")(server);
 app.use(express.static(__dirname + "/public"));
-let code = "DSC"
+let code = "Europe"
 let Idlesockets = [];
 let activeSockets = []
 io.sockets.on("connection", async socket => {
